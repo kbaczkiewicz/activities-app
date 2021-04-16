@@ -19,7 +19,7 @@ class DateNotFromPastValidator extends ConstraintValidator
             return;
         }
 
-        if ($value < new \DateTime()) {
+        if ($value < new \DateTime('now 00:00:00')) {
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ date }}', $value->format('Y-m-d H:i:s'))
                 ->addViolation();

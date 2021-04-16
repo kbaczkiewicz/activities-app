@@ -8,15 +8,16 @@ use App\Controller\BaseController;
 use App\Controller\ControllerResponsesTrait;
 use App\Entity\Activity;
 use App\Enum\ActivityStatus;
-use App\Enum\IntervalStatus;
+use App\Messenger\Message\NewActivityIteration;
 use App\Repository\ActivityRepository;
 use App\Repository\ActivityTypeRepository;
-use App\Repository\IntervalRepository;
+use App\Request\Activity\EmptyEditActivity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Request\Activity\EditActivity as EditActivityRequest;
@@ -29,17 +30,20 @@ class EditActivity extends AbstractController implements BaseController
     private $validator;
     private $activityTypeRepository;
     private $entityManager;
+    private $messageBus;
 
     public function __construct(
         ActivityRepository $activityRepository,
         ActivityTypeRepository $activityTypeRepository,
         ValidatorInterface $validator,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        MessageBusInterface $messageBus
     ) {
         $this->activityRepository = $activityRepository;
         $this->validator = $validator;
         $this->activityTypeRepository = $activityTypeRepository;
         $this->entityManager = $entityManager;
+        $this->messageBus = $messageBus;
     }
 
     /**
@@ -53,18 +57,25 @@ class EditActivity extends AbstractController implements BaseController
                 return $this->createNotFoundResponse('Activity does not exist');
             }
 
-            if (ActivityStatus::STATUS_CREATED !== $activity->getStatus()) {
-                return $this->createConflictResponse('Activity can no longer be modified');
-            }
-
             if ($this->getUser()->getId() !== $activity->getUser()->getId()) {
                 $this->createForbiddenResponse('You are not permitted to see this action');
             }
 
             $editActivityRequest = EditActivityRequest::fromArray(json_decode($request->getContent(), true));
-            $this->saveActivity($activity, $editActivityRequest);
+            if (ActivityStatus::STATUS_CREATED === $activity->getStatus()
+                && $editActivityRequest instanceof EmptyEditActivity
+            ) {
+                $this->markActivityAsCompleted($activity);
+            } else {
+                $errors = $this->validator->validate($editActivityRequest);
+                if ($errors->count() > 0) {
+                    return new JsonResponse(['errors' => (string)$errors], Response::HTTP_BAD_REQUEST);
+                }
 
-            return new JsonResponse();
+                $this->saveActivity($activity, $editActivityRequest);
+            }
+
+            return new JsonResponse(null, Response::HTTP_NO_CONTENT);
         } catch (\InvalidArgumentException $e) {
             return new JsonResponse(['reason' => 'Activity type does not exist', Response::HTTP_NOT_FOUND]);
         }
@@ -85,6 +96,14 @@ class EditActivity extends AbstractController implements BaseController
         }
 
         $this->entityManager->persist($activity);
+        $this->entityManager->flush();
+    }
+
+    private function markActivityAsCompleted(Activity $activity): void
+    {
+        $activity->setStatus(ActivityStatus::STATUS_COMPLETED);
+        $this->entityManager->persist($activity);
+        $this->messageBus->dispatch(new NewActivityIteration($activity));
         $this->entityManager->flush();
     }
 }

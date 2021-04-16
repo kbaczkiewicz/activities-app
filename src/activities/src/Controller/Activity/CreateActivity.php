@@ -8,7 +8,6 @@ use App\Controller\BaseController;
 use App\Controller\ControllerResponsesTrait;
 use App\Entity\Activity;
 use App\Entity\ActivityType;
-use App\Entity\User;
 use App\Enum\ActivityStatus;
 use App\Repository\ActivityTypeRepository;
 use App\Request\Activity\CreateActivity as CreateActivityRequest;
@@ -62,7 +61,7 @@ class CreateActivity extends AbstractController implements BaseController
 
         $activityId = $this->createActivity($createActivityRequest, $activityType, $this->getUser());
 
-        return new JsonResponse(['data' => ['id' => $activityId->getId()]]);
+        return new JsonResponse(['data' => ['id' => $activityId->getId()]], Response::HTTP_CREATED);
     }
 
     private function createActivity(
@@ -75,6 +74,7 @@ class CreateActivity extends AbstractController implements BaseController
         $activity->setStatus(ActivityStatus::STATUS_CREATED);
         $activity->setType($activityType);
         $activity->setUser($user);
+
 
         $this->entityManager->persist($activity);
         $this->entityManager->flush();

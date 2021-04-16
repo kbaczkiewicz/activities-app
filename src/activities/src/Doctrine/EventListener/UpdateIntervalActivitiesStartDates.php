@@ -6,6 +6,7 @@ namespace App\Doctrine\EventListener;
 
 use App\Entity\Activity;
 use App\Entity\Interval;
+use App\Enum\ActivityStatus;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class UpdateIntervalActivitiesStartDates
@@ -14,7 +15,7 @@ class UpdateIntervalActivitiesStartDates
     {
         /** @var Interval $interval */
         $interval = $args->getObject();
-        if (false === $interval instanceof  Interval) {
+        if (false === $interval instanceof Interval) {
             return;
         }
 
@@ -23,6 +24,10 @@ class UpdateIntervalActivitiesStartDates
         foreach ($interval->getActivities() as $activity) {
             if ($interval->getDateStart() && $activity->getDateStart() !== $interval->getDateStart()) {
                 $activity->setDateStart($interval->getDateStart());
+                if ($activity->shouldStart()) {
+                    $activity->setStatus(ActivityStatus::STATUS_PENDING);
+                }
+
                 $entityManager->persist($activity);
             }
         }

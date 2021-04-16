@@ -41,7 +41,7 @@ class CreateInterval extends AbstractController implements BaseController
 
         $intervalId = $this->saveInterval($this->createModel($createIntervalRequest));
 
-        return new JsonResponse(['data' => ['intervalId' => $intervalId->getId()]]);
+        return new JsonResponse(['data' => ['intervalId' => $intervalId->getId()]], Response::HTTP_CREATED);
     }
 
     private function createModel(CreateIntervalRequest $createIntervalRequest): Interval

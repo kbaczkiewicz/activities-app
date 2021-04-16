@@ -1,15 +1,14 @@
 <?php
 
+namespace App\Messenger\Handler;
 
-namespace App\Messenger\Message;
-
-
+use App\Entity\Interval;
 use App\Enum\IntervalStatus;
-use App\Messenger\Handler\FinishedIntervals;
+use App\Messenger\Message\CreatedIntervalsToStart;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class FinishedIntervalsHandler implements MessageHandlerInterface
+class CreatedIntervalsToStartHandler implements MessageHandlerInterface
 {
     private $entityManager;
 
@@ -18,14 +17,11 @@ class FinishedIntervalsHandler implements MessageHandlerInterface
         $this->entityManager = $entityManager;
     }
 
-    public function __invoke(FinishedIntervals $message)
+    public function __invoke(CreatedIntervalsToStart $message): void
     {
         foreach ($message->getIntervals() as $interval) {
-            $interval->setStatus(IntervalStatus::STATUS_ENDED);
+            $interval->setStatus(IntervalStatus::STATUS_STARTED);
             $this->entityManager->persist($interval);
         }
-
-        $this->entityManager->flush();
-        /** @todo implement push message */
     }
 }

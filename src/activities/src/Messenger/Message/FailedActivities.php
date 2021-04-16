@@ -5,7 +5,6 @@ namespace App\Messenger\Message;
 
 
 use App\Entity\Activity;
-use App\Value\Identificator\ActivityId;
 
 class FailedActivities
 {

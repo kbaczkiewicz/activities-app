@@ -5,6 +5,7 @@ namespace App\Repository;
 
 
 use App\Entity\Activity;
+use App\Entity\Interval;
 use App\Enum\ActivityStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -49,6 +50,37 @@ class ActivityRepository extends EntityRepository
             ->andWhere('a.status = :ongoingStatus')
             ->setParameter('ongoingStatus', ActivityStatus::STATUS_PENDING)
             ->andWhere('a.interval IS NOT NULL')
+            ->getQuery()->getResult();
+    }
+
+    public function getActivitiesToStart(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.type', 't')
+            ->where('a.dateStart >= :currentDate')
+            ->setParameter('currentDate', new \DateTime())
+            ->andWhere('a.status = :createdStatus')
+            ->setParameter('createdStatus', ActivityStatus::STATUS_CREATED)
+            ->andWhere('a.interval IS NOT NULL')
+            ->getQuery()->getResult();
+    }
+
+    public function getCompletedActivities(Interval $interval): array
+    {
+        return $this->getActivitiesForIntervalAndStatus($interval, ActivityStatus::STATUS_COMPLETED);
+    }
+
+    public function getFailedActivities(Interval $interval): array
+    {
+        return $this->getActivitiesForIntervalAndStatus($interval, ActivityStatus::STATUS_FAILED);
+    }
+
+    private function getActivitiesForIntervalAndStatus(Interval $interval, string $status): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.interval = :interval')
+            ->andWhere('a.status = :status')
+            ->setParameters(['interval' => $interval, 'status' => $status])
             ->getQuery()->getResult();
     }
 

@@ -8,6 +8,7 @@ use App\Controller\BaseController;
 use App\Entity\Interval;
 use App\Repository\IntervalRepository;
 use App\Response\Interval as IntervalResponse;
+use App\Request\Filters;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,9 @@ class GetIntervals extends AbstractController implements BaseController
                         function (Interval $interval) {
                             return IntervalResponse::fromModel($interval);
                         },
-                        $this->intervalRepository->findBy(['user' => $this->getUser()])
+                        $this->intervalRepository->findBy(
+                            (new Filters($request->query->all() + ['user' => $this->getUser()]))->getFilters()
+                        )
                     ),
             ]
         );

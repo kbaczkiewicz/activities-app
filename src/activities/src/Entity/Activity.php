@@ -27,7 +27,7 @@ class Activity
     private $name;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $dateStart;
 
@@ -43,13 +43,13 @@ class Activity
     private $interval;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ActivityType")
+     * @ORM\ManyToOne(targetEntity="ActivityType", cascade={"REMOVE", "PERSIST"})
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
      */
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", cascade={"REMOVE", "PERSIST"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
@@ -137,6 +137,7 @@ class Activity
     public function createNewIterationOfActivity(): self
     {
         $dateStart = $this->getDateEnd();
+        $dateStart->add(new \DateInterval('P1D'));
         if (null === $dateStart) {
             throw new \LogicException('Cannot start a new activity as previous does not have an ending date');
         }
@@ -145,10 +146,19 @@ class Activity
         $newActivity->setName($this->name);
         $newActivity->setDateStart($dateStart);
         $newActivity->setUser($this->getUser());
-        $newActivity->setStatus(ActivityStatus::STATUS_PENDING);
+        $newActivity->setStatus(ActivityStatus::STATUS_CREATED);
         $newActivity->setType($this->getType());
         $newActivity->setInterval($this->getInterval());
 
         return $newActivity;
+    }
+
+    public function shouldStart(): bool
+    {
+        $today = new \DateTime('today 00:00:00');
+        $dateStart = $this->getDateStart();
+        $dateStart->setTime(0, 0, 0);
+
+        return $today === $dateStart;
     }
 }

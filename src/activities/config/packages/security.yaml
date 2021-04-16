@@ -3,9 +3,7 @@ security:
     App\Entity\User:
       algorithm: auto
 
-  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
   providers:
-    # used to reload user from session & other features (e.g. switch_user)
     app_user_provider:
       entity:
         class: App\Entity\User
@@ -13,6 +11,10 @@ security:
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    dupa:
+      pattern: ^/api/dupa
       security: false
 
     register:

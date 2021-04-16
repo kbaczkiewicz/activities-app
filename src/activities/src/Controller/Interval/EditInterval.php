@@ -62,7 +62,7 @@ class EditInterval extends AbstractController implements BaseController
 
         $this->saveInterval($interval, $editIntervalRequest);
 
-        return new JsonResponse();
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
     private function getInterval(string $intervalId): ?Interval

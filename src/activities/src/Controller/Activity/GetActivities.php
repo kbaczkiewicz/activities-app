@@ -10,13 +10,14 @@ use App\Entity\Activity;
 use App\Repository\ActivityRepository;
 use App\Repository\IntervalRepository;
 use App\Response\Activity as ActivityResponse;
+use PHPUnit\Util\Json;
+use App\Request\Filters;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/** @todo implement filters */
 class GetActivities extends AbstractController implements BaseController
 {
     use ControllerResponsesTrait;
@@ -31,7 +32,6 @@ class GetActivities extends AbstractController implements BaseController
     }
 
     /**
-     * @Route("/api/activity", name="get_all_activities", methods={"get"})
      * @Route("/api/activity/{intervalId}", name="get_activities", methods={"get"})
      */
     public function process(Request $request): Response
@@ -42,24 +42,18 @@ class GetActivities extends AbstractController implements BaseController
                 function (Activity $activity) {
                     return ActivityResponse::fromModel($activity);
                 },
-                $this->getActivities($intervalId)
+                $this->getActivities($intervalId, new Filters($request->query->all()))
             )
         );
     }
 
-    private function getActivities(?string $intervalId): array
+    private function getActivities(?string $intervalId, Filters $filters): array
     {
-        $criteria = ['user' => $this->getUser()];
+        $filters->addFilter('user', $this->getUser());
         if (null !== $intervalId) {
-            $interval = $this->intervalRepository->find($intervalId);
-            if (null === $interval) {
-                return [];
-            }
-
-            $criteria['interval'] = $interval;
+            $filters->addFilter('interval', $intervalId);
         }
 
-
-        return $this->repository->findBy($criteria);
+        return $this->repository->findBy($filters->getFilters());
     }
 }

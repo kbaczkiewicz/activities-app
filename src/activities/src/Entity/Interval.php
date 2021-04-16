@@ -27,12 +27,12 @@ class Interval
     private $name;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
      */
     private $dateStart;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
      */
     private $dateEnd;
 
@@ -42,12 +42,7 @@ class Interval
     private $status;
 
     /**
-     * @ORM\OneToOne(targetEntity="Rating", mappedBy="interval", fetch="EXTRA_LAZY")
-     */
-    private $rating;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Activity", mappedBy="interval", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="interval", fetch="EAGER", cascade={"REMOVE", "PERSIST"})
      */
     private $activities;
 
@@ -112,14 +107,14 @@ class Interval
         $this->status = $status;
     }
 
-    public function getRating(): ?Rating
+    public function getRating(): ?IntervalStats
     {
-        return $this->rating;
+        return $this->stats;
     }
 
-    public function setRating(Rating $rating): void
+    public function setRating(IntervalStats $rating): void
     {
-        $this->rating = $rating;
+        $this->stats = $rating;
     }
 
     public function getActivities()

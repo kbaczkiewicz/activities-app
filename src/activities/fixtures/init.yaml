@@ -1,0 +1,189 @@
+App\Entity\User:
+  user_1:
+    email: 'kamil.baczkiewicz@example.com'
+    password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$ztg45GK+spmUFzFLPad1lA\$c7QUv5dIoXnx3/FkklL2In68UmKukva1p1I89+msrus' # password1234
+  user_change_password:
+    email: 'change.password@example.com'
+    password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$ztg45GK+spmUFzFLPad1lA\$c7QUv5dIoXnx3/FkklL2In68UmKukva1p1I89+msrus' # password1234
+
+App\Entity\ActivityType:
+  daily_activity:
+    name: 'Codzienna'
+    daysSpan: 1
+  weekly_activity:
+    name: "Cotygodniowa"
+    daysSpan: 7
+
+App\Entity\Interval:
+  interval_to_start_{1..2}:
+    name: 'Interwał'
+    dateStart: '<dateTimeBetween("-7 days", "-1 day")>'
+    dateEnd: '<dateTimeBetween("+15 days", "+40 days")>'
+    user: '@user_1'
+    status: 'saved'
+  interval_new_{1..2}:
+    name: 'Interwał'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    dateEnd: '<dateTimeBetween("+15 days", "+40 days")>'
+    user: '@user_1'
+    status: 'new'
+  interval_started_{1..2}:
+    name: 'Interwał'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    dateEnd: '<dateTimeBetween("+15 days", "+40 days")>'
+    user: '@user_1'
+    status: 'started'
+  interval_past_due_{1..2}:
+    name: 'Interwał po terminie'
+    dateStart: '<dateTimeBetween("-40 days", "-15 days")>'
+    dateEnd: '<dateTimeBetween("-14 days", "-7 days")>'
+    user: '@user_1'
+    status: 'started'
+  interval_finished_{1..2}:
+    name: 'Interwał zakończony'
+    dateStart: '<dateTimeBetween("-40 days", "-15 days")>'
+    dateEnd: '<dateTimeBetween("-14 days", "-7 days")>'
+    user: '@user_1'
+    status: 'ended'
+
+App\Entity\Activity:
+  activity_new_daily_1:
+    name: 'Aktywność codzienna'
+    status: 'created'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_new_1'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_new_weekly_1:
+    name: 'Aktywność tygodniowa'
+    status: 'created'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_new_1'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_new_daily_2:
+    name: 'Aktywność codzienna'
+    status: 'created'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_new_2'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_new_weekly_2:
+    name: 'Aktywność tygodniowa'
+    status: 'created'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_new_2'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_pending_daily_1:
+    name: 'Aktywność codzienna'
+    status: 'pending'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_started_1'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_pending_weekly_1:
+    name: 'Aktywność tygodniowa'
+    status: 'pending'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_started_1'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_pending_daily_2:
+    name: 'Aktywność codzienna'
+    status: 'pending'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_started_2'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_pending_weekly_2:
+    name: 'Aktywność tygodniowa'
+    status: 'pending'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_started_2'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_past_due_daily_1:
+    name: 'Aktywność codzienna'
+    status: 'pending'
+    dateStart: '<dateTimeBetween("-14 days", "-7 days")>'
+    interval: '@interval_past_due_1'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_past_due_weekly_1:
+    name: 'Aktywność tygodniowa'
+    status: 'pending'
+    dateStart: '<dateTimeBetween("-14 days", "-7 days")>'
+    interval: '@interval_past_due_2'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_past_due_daily_2:
+    name: 'Aktywność codzienna'
+    status: 'pending'
+    dateStart: '<dateTimeBetween("-14 days", "-7 days")>'
+    interval: '@interval_past_due_1'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_past_due_weekly_2:
+    name: 'Aktywność tygodniowa'
+    status: 'pending'
+    dateStart: '<dateTimeBetween("-14 days", "-7 days")>'
+    interval: '@interval_past_due_2'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_finished_daily_1:
+    name: 'Aktywność codzienna'
+    status: 'completed'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_finished_1'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_finished_weekly_1:
+    name: 'Aktywność tygodniowa'
+    status: 'completed'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_finished_1'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_failed_daily_1:
+    name: 'Aktywność codzienna'
+    status: 'failed'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_finished_1'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_failed_weekly_1:
+    name: 'Aktywność tygodniowa'
+    status: 'failed'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_finished_1'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_finished_daily_2:
+    name: 'Aktywność codzienna'
+    status: 'completed'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_finished_2'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_finished_weekly_2:
+    name: 'Aktywność tygodniowa'
+    status: 'completed'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_finished_2'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_failed_daily21:
+    name: 'Aktywność codzienna'
+    status: 'failed'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_finished_2'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_failed_weekly_2:
+    name: 'Aktywność tygodniowa'
+    status: 'failed'
+    dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
+    interval: '@interval_finished_2'
+    type: '@weekly_activity'
+    user: '@user_1'

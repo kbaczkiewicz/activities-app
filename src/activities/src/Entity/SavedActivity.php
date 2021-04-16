@@ -24,12 +24,12 @@ class SavedActivity
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ActivityType::class)
+     * @ORM\ManyToOne(targetEntity=ActivityType::class, cascade={"REMOVE", "PERSIST"})
      */
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"REMOVE", "PERSIST"})
      */
     private $user;
 

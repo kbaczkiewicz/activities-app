@@ -18,7 +18,7 @@ class CreateActivity
      */
     private $typeId;
 
-    public function __construct(string $name, ActivityTypeId $typeId)
+    public function __construct(?string $name = null, ?ActivityTypeId $typeId = null)
     {
         $this->name = $name;
         $this->typeId = $typeId;
@@ -32,12 +32,12 @@ class CreateActivity
         );
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getTypeId(): ActivityTypeId
+    public function getTypeId(): ?ActivityTypeId
     {
         return $this->typeId;
     }

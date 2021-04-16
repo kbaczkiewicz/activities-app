@@ -1,14 +1,11 @@
 <?php
 
-
-namespace App\Messenger\Handler;
-
+namespace App\Messenger\Message;
 
 use App\Entity\Interval;
 
-class FinishedIntervals
+class CreatedIntervalsToStart
 {
-    /** @var Interval[] */
     private $intervals;
 
     public function __construct(Interval ...$intervals)

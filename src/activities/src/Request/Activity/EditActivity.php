@@ -1,11 +1,13 @@
 <?php
 
-
 namespace App\Request\Activity;
 
-
 use App\Value\Identificator\ActivityTypeId;
+use App\Validation\Constraints\AtLeastOneNotBlank;
 
+/**
+ * @AtLeastOneNotBlank()
+ */
 class EditActivity
 {
     private $name;
@@ -17,8 +19,12 @@ class EditActivity
         $this->typeId = $typeId;
     }
 
-    public static function fromArray(array $data)
+    public static function fromArray(array $data): EditActivity
     {
+        if (!isset($data['name']) && !isset($data['typeId'])) {
+            return new EmptyEditActivity();
+        }
+
         return new self(
             isset($data['name']) ? $data['name'] : null,
             isset($data['typeId']) ? new ActivityTypeId($data['typeId']) : null

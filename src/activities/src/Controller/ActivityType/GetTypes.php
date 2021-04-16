@@ -36,7 +36,7 @@ class GetTypes extends AbstractController implements BaseController
                         function (ActivityType $type) {
                             return \App\Response\ActivityType::fromModel($type);
                         },
-                        $this->activityTypeRepository->findBy(['user' => $user])
+                        $this->activityTypeRepository->findByUserWithGeneral($user)
                     ),
             ]
         );

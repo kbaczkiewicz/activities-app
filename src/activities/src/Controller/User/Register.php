@@ -48,7 +48,7 @@ class Register implements BaseController
 
         $userId = $this->saveUser($registerRequest);
 
-        return new JsonResponse(['data' => ['id' => $userId->getId()]]);
+        return new JsonResponse(['data' => ['id' => $userId->getId()]], Response::HTTP_CREATED);
     }
 
     private function saveUser(\App\Request\User\Register $registerRequest): UserId

@@ -8,6 +8,7 @@ use App\Entity\ActivityType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ActivityTypeRepository extends EntityRepository
 {
@@ -34,6 +35,15 @@ class ActivityTypeRepository extends EntityRepository
     public function findOneBy(array $criteria, array $orderBy = null): ?ActivityType
     {
         return parent::findOneBy($criteria, $orderBy);
+    }
+
+    public function findByUserWithGeneral(?UserInterface $user): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.user = :user')
+            ->setParameter('user', $user)
+            ->orWhere('a.user IS NULL')
+            ->getQuery()->getResult();
     }
 
 }
