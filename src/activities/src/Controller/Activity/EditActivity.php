@@ -62,7 +62,7 @@ class EditActivity extends AbstractController implements BaseController
             }
 
             $editActivityRequest = EditActivityRequest::fromArray(json_decode($request->getContent(), true));
-            if (ActivityStatus::STATUS_CREATED === $activity->getStatus()
+            if (ActivityStatus::STATUS_PENDING === $activity->getStatus()
                 && $editActivityRequest instanceof EmptyEditActivity
             ) {
                 $this->markActivityAsCompleted($activity);

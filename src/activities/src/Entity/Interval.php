@@ -4,6 +4,7 @@
 namespace App\Entity;
 
 
+use App\Enum\ActivityStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -136,6 +137,11 @@ class Interval
     {
         foreach($activities as $activity) {
             $activity->setDateStart($this->getDateStart());
+            $activity->setStatus(
+                new \DateTime() > $activity->getDateStart(
+                ) ? ActivityStatus::STATUS_CREATED : ActivityStatus::STATUS_PENDING
+            );
+
             $this->addActivity($activity);
             $activity->setInterval($this);
         }
