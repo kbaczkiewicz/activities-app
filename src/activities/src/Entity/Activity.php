@@ -43,13 +43,13 @@ class Activity
     private $interval;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ActivityType", cascade={"REMOVE", "PERSIST"})
+     * @ORM\ManyToOne(targetEntity="ActivityType")
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
      */
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", cascade={"REMOVE", "PERSIST"})
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

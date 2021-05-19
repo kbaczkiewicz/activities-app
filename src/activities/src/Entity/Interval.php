@@ -108,16 +108,6 @@ class Interval
         $this->status = $status;
     }
 
-    public function getRating(): ?IntervalStats
-    {
-        return $this->stats;
-    }
-
-    public function setRating(IntervalStats $rating): void
-    {
-        $this->stats = $rating;
-    }
-
     public function getActivities()
     {
         return $this->activities;
@@ -138,8 +128,9 @@ class Interval
         foreach($activities as $activity) {
             $activity->setDateStart($this->getDateStart());
             $activity->setStatus(
-                new \DateTime() > $activity->getDateStart(
-                ) ? ActivityStatus::STATUS_CREATED : ActivityStatus::STATUS_PENDING
+                $activity->getDateStart() >= new \DateTime('today 00:00:00')
+                    ? ActivityStatus::STATUS_PENDING
+                    : ActivityStatus::STATUS_CREATED
             );
 
             $this->addActivity($activity);
