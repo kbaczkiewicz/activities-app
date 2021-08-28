@@ -18,8 +18,8 @@ class StatsCalculator
     public function calculate(Interval $interval)
     {
         return new IntervalStats(
-            count($this->activityRepository->findBy(['interval' => $interval, 'status' => 'completed'])),
-            count($this->activityRepository->findBy(['interval' => $interval, 'status' => 'failed'])),
+            $this->activityRepository->findBy(['interval' => $interval, 'status' => 'completed']),
+            $this->activityRepository->findBy(['interval' => $interval, 'status' => 'failed']),
             );
     }
 }

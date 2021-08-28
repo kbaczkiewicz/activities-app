@@ -24,8 +24,8 @@ class IntervalPostFinishStatsHandler implements MessageHandlerInterface
         $interval = $message->getInterval();
         $stats = new IntervalStats();
         $stats->setInterval($interval);
-        $stats->setCompletedActivities(...$this->activityRepository->getCompletedActivities($interval));
-        $stats->setFailedActivities(...$this->activityRepository->getFailedActivities($interval));
+        $stats->setCompletedActivities(...$this->activityRepository->findCompletedActivities($interval));
+        $stats->setFailedActivities(...$this->activityRepository->findFailedActivities($interval));
         $this->entityManager->persist($stats);
     }
 }

@@ -43,7 +43,7 @@ class ChangePassword extends AbstractController implements BaseController
             return new JsonResponse(['errors' => (string)$errors], Response::HTTP_BAD_REQUEST);
         }
 
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $changePasswordRequest->getPassword()));
+        $user->setPassword($this->passwordEncoder->encodePassword($user, $changePasswordRequest->getPasswordRepeat()));
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 

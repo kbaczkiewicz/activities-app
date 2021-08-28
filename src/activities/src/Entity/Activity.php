@@ -126,18 +126,19 @@ class Activity
 
     public function getDateEnd(): ?\DateTime
     {
+        /** @var \DateTime $dateStart */
+        $dateStart = $this->dateStart;
         if (false === $this->dateStart) {
             return null;
         }
-        
-        return $this->getDateStart()
+        dump($dateStart->format('Y-m-d'));
+        return $dateStart
             ->add(new \DateInterval(sprintf('P%dD', $this->getType()->getDaysSpan())));
     }
 
     public function createNewIterationOfActivity(): self
     {
         $dateStart = $this->getDateEnd();
-        $dateStart->add(new \DateInterval('P1D'));
         if (null === $dateStart) {
             throw new \LogicException('Cannot start a new activity as previous does not have an ending date');
         }
@@ -151,6 +152,18 @@ class Activity
         $newActivity->setInterval($this->getInterval());
 
         return $newActivity;
+    }
+
+    public function getOccurrencesOfActivity(): array
+    {
+        $occurrences = [];
+        $activity = $this;
+        while ($activity->getDateStart() <= $this->getInterval()->getDateEnd()) {
+            $occurrences[] = $activity->getDateStart()->format('d.m.Y');
+            $activity = $this->createNewIterationOfActivity();
+        }
+
+        return $occurrences;
     }
 
     public function shouldStart(): bool

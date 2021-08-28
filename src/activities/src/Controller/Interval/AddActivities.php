@@ -8,6 +8,7 @@ use App\Controller\BaseController;
 use App\Controller\ControllerResponsesTrait;
 use App\Entity\Interval;
 use App\Enum\IntervalStatus;
+use App\Messenger\Message\SaveActivity;
 use App\Repository\ActivityRepository;
 use App\Repository\IntervalRepository;
 use App\Request\Interval\AddActivities as AddActivitiesRequest;
@@ -17,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -28,17 +30,20 @@ class AddActivities extends AbstractController implements BaseController
     private $intervalRepository;
     private $activityRepository;
     private $entityManager;
+    private $messageBus;
 
     public function __construct(
         ValidatorInterface $validator,
         IntervalRepository $intervalRepository,
         ActivityRepository $activityRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        MessageBusInterface $messageBus
     ) {
         $this->validator = $validator;
         $this->intervalRepository = $intervalRepository;
         $this->activityRepository = $activityRepository;
         $this->entityManager = $entityManager;
+        $this->messageBus = $messageBus;
     }
 
     /**
@@ -93,8 +98,12 @@ class AddActivities extends AbstractController implements BaseController
 
     private function addActivities(?Interval $interval, AddActivitiesRequest $addActivitiesRequest)
     {
-        $interval->addActivities(...$this->getActivities(...$addActivitiesRequest->getActivitiesIds()));
+        $activities = $this->getActivities(...$addActivitiesRequest->getActivitiesIds());
+        $interval->addActivities(...$activities);
         $this->entityManager->persist($interval);
         $this->entityManager->flush();
+        foreach ($activities as $activity) {
+            $this->messageBus->dispatch(new SaveActivity($interval->getUser(), $activity));
+        }
     }
 }

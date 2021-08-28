@@ -34,7 +34,7 @@ class MarkFailedActivitiesCommand extends Command
         $output->writeln('<info>Mark failed activities command</info>');
         $output->writeln('');
         $output->writeln('Looking for activities');
-        $activities = $this->repository->getActivitiesToMarkAsFailed();
+        $activities = $this->repository->findActivitiesToMarkAsFailed();
         $output->writeln(sprintf('Found %d activities', count($activities)));
         $output->writeln('Dispatching message');
         $this->messageBus->dispatch(new FailedActivities(...$activities));

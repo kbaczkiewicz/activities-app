@@ -32,6 +32,5 @@ class FailedActivitiesHandler implements MessageHandlerInterface
         }
 
         $this->entityManager->flush();
-        /** @todo implement push message */
     }
 }

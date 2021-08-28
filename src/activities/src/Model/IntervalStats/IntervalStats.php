@@ -2,25 +2,44 @@
 
 namespace App\Model\IntervalStats;
 
+use App\Entity\Activity;
+
 class IntervalStats implements \JsonSerializable
 {
-    private $completedActivitiesAmount;
-    private $failedActivitiesAmount;
+    private $completedActivities;
+    private $failedActivities;
 
-    public function __construct(int $completedActivitiesAmount, int $failedActivitiesAmount)
+    /**
+     * @param Activity[] $completedActivities
+     * @param Activity[] $failedActivities
+     */
+    public function __construct(array $completedActivities, array $failedActivities)
     {
-        $this->completedActivitiesAmount = $completedActivitiesAmount;
-        $this->failedActivitiesAmount = $failedActivitiesAmount;
+        $this->completedActivities = $completedActivities;
+        $this->failedActivities = $failedActivities;
     }
 
     public function jsonSerialize(): array
     {
         return [
-            'completedAmount' => $this->completedActivitiesAmount,
-            'failedAmount' => $this->failedActivitiesAmount,
-            'completedPercent' => 0 === ($this->failedActivitiesAmount + $this->completedActivitiesAmount)
-                ? 0
-                : $this->completedActivitiesAmount / ($this->failedActivitiesAmount + $this->completedActivitiesAmount),
+            'activities' =>
+                array_map(
+                    function (Activity $a) {
+                        return [
+                            'name' => $a->getName(),
+                            'dateStart' => $a->getDateStart()->format('Y-m-d'),
+                            'status' => $a->getStatus(),
+                        ];
+                    },
+                    array_merge($this->failedActivities, $this->completedActivities)
+                ),
+            'completed' => count($this->completedActivities),
+            'failed' => count($this->failedActivities),
+            'completedPercent' => 0 === (count($this->failedActivities) + count(
+                    $this->completedActivities
+                )) ? 0 : count($this->completedActivities) / (count($this->failedActivities) + count(
+                        $this->completedActivities
+                    )),
         ];
     }
 }

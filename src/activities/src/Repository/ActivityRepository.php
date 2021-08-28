@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Activity;
 use App\Entity\Interval;
+use App\Entity\User;
 use App\Enum\ActivityStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -41,7 +42,7 @@ class ActivityRepository extends EntityRepository
     /**
      * @return Activity[]
      */
-    public function getActivitiesToMarkAsFailed(): array
+    public function findActivitiesToMarkAsFailed(): array
     {
         return $this->createQueryBuilder('a')
             ->join('a.type', 't')
@@ -53,7 +54,7 @@ class ActivityRepository extends EntityRepository
             ->getQuery()->getResult();
     }
 
-    public function getActivitiesToStart(): array
+    public function findActivitiesToStart(): array
     {
         return $this->createQueryBuilder('a')
             ->join('a.type', 't')
@@ -65,22 +66,52 @@ class ActivityRepository extends EntityRepository
             ->getQuery()->getResult();
     }
 
-    public function getCompletedActivities(Interval $interval): array
+    public function findUniqueByInterval(Interval $interval): array
     {
-        return $this->getActivitiesForIntervalAndStatus($interval, ActivityStatus::STATUS_COMPLETED);
+        return $this->createQueryBuilder('a')
+            ->join('a.interval', 'i')
+            ->where('a.interval = :intervalId')
+            ->groupBy('a.id', 'i.id')
+            ->setParameters(['intervalId' => $interval->getId()])
+            ->getQuery()->getResult();
     }
 
-    public function getFailedActivities(Interval $interval): array
+    public function findCompletedActivities(Interval $interval): array
     {
-        return $this->getActivitiesForIntervalAndStatus($interval, ActivityStatus::STATUS_FAILED);
+        return $this->findActivitiesForIntervalAndStatus($interval, ActivityStatus::STATUS_COMPLETED);
     }
 
-    private function getActivitiesForIntervalAndStatus(Interval $interval, string $status): array
+    public function findFailedActivities(Interval $interval): array
+    {
+        return $this->findActivitiesForIntervalAndStatus($interval, ActivityStatus::STATUS_FAILED);
+    }
+
+    public function findCompletedActivitiesForUser(User $user)
+    {
+        return $this->findActivitiesForUserAndStatus($user, ActivityStatus::STATUS_COMPLETED);
+    }
+
+    public function findFailedActivitiesForUser(User $user)
+    {
+        return $this->findActivitiesForUserAndStatus($user, ActivityStatus::STATUS_FAILED);
+    }
+
+    private function findActivitiesForIntervalAndStatus(Interval $interval, string $status): array
     {
         return $this->createQueryBuilder('a')
             ->where('a.interval = :interval')
             ->andWhere('a.status = :status')
             ->setParameters(['interval' => $interval, 'status' => $status])
+            ->getQuery()->getResult();
+    }
+
+    private function findActivitiesForUserAndStatus(User $user, string $status): array
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.interval', 'i')
+            ->where('i.user = :user')
+            ->andWhere('a.status = :status')
+            ->setParameters(['user' => $user, 'status' => $status])
             ->getQuery()->getResult();
     }
 

@@ -33,6 +33,16 @@ class SavedActivity
      */
     private $user;
 
+    public static function createFromActivity(Activity $activity): self
+    {
+        $savedActivity = new self();
+        $savedActivity->setType($activity->getType());
+        $savedActivity->setName($activity->getName());
+        $savedActivity->setUser($activity->getUser());
+
+        return $savedActivity;
+    }
+
     public function getId(): ?string
     {
         return $this->id;

@@ -45,6 +45,12 @@ App\Entity\Interval:
     dateEnd: '<dateTimeBetween("-14 days", "-7 days")>'
     user: '@user_1'
     status: 'ended'
+  interval_for_statistics:
+    name: "Interwał ze statystykami"
+    dateStart: '<dateTime("now - 14 days")>'
+    dateEnd: '<dateTime("now - 7 days")>'
+    user: "@user_1"
+    status: "ended"
 
 App\Entity\Activity:
   activity_new_daily_1:
@@ -185,5 +191,68 @@ App\Entity\Activity:
     status: 'failed'
     dateStart: '<dateTimeBetween("+7 days", "+14 days")>'
     interval: '@interval_finished_2'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_daily_for_statistics_1:
+    name: 'Aktywność dzienna'
+    status: 'completed'
+    dateStart: '<dateTime("now - 14 days")>'
+    interval: '@interval_for_statistics'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_daily_for_statistics_2:
+    name: 'Aktywność dzienna'
+    status: 'completed'
+    dateStart: '<dateTime("now - 13 days")>'
+    interval: '@interval_for_statistics'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_daily_for_statistics_3:
+    name: 'Aktywność dzienna'
+    status: 'failed'
+    dateStart: '<dateTime("now - 12 days")>'
+    interval: '@interval_for_statistics'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_daily_for_statistics_4:
+    name: 'Aktywność dzienna'
+    status: 'completed'
+    dateStart: '<dateTime("now - 11 days")>'
+    interval: '@interval_for_statistics'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_daily_for_statistics_5:
+    name: 'Aktywność dzienna'
+    status: 'failed'
+    dateStart: '<dateTime("now - 10 days")>'
+    interval: '@interval_for_statistics'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_daily_for_statistics_6:
+    name: 'Aktywność dzienna'
+    status: 'failed'
+    dateStart: '<dateTime("now - 9 days")>'
+    interval: '@interval_for_statistics'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_daily_for_statistics_7:
+    name: 'Aktywność dzienna'
+    status: 'completed'
+    dateStart: '<dateTime("now - 8 days")>'
+    interval: '@interval_for_statistics'
+    type: '@daily_activity'
+    user: '@user_1'
+  activity_weekly_for_statistics_1:
+    name: 'Aktywność tygodniowa'
+    status: 'completed'
+    dateStart: '<dateTime("now - 14 days")>'
+    interval: '@interval_for_statistics'
+    type: '@weekly_activity'
+    user: '@user_1'
+  activity_weekly_for_statistics_2:
+    name: 'Aktywność tygodniowa'
+    status: 'failed'
+    dateStart: '<dateTime("now - 7 days")>'
+    interval: '@interval_for_statistics'
     type: '@weekly_activity'
     user: '@user_1'

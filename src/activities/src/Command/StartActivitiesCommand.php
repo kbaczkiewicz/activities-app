@@ -40,7 +40,7 @@ class StartActivitiesCommand extends Command
         $output->writeln('<info>Mark failed activities command</info>');
         $output->writeln('');
         $output->writeln('Looking for activities');
-        $activities = $this->repository->getActivitiesToStart();
+        $activities = $this->repository->findActivitiesToStart();
         $output->writeln(sprintf('Found %d activities', count($activities)));
         $output->writeln('Dispatching message');
         $this->messageBus->dispatch(new CreatedActivitiesToStart(...$activities));
