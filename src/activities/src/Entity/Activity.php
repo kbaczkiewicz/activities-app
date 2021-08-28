@@ -131,7 +131,7 @@ class Activity
         if (false === $this->dateStart) {
             return null;
         }
-        dump($dateStart->format('Y-m-d'));
+
         return $dateStart
             ->add(new \DateInterval(sprintf('P%dD', $this->getType()->getDaysSpan())));
     }
