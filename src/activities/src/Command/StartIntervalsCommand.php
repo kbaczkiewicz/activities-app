@@ -37,7 +37,7 @@ class StartIntervalsCommand extends Command
 
     public function run(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<info>Mark failed activities command</info>');
+        $output->writeln('<info>Mark created intervals as started</info>');
         $output->writeln('');
         $output->writeln('Looking for activities');
         $intervals = $this->repository->getIntervalsToStart();
