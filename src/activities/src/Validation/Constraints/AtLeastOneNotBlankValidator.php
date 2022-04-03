@@ -2,6 +2,7 @@
 
 namespace App\Validation\Constraints;
 
+use App\Request\Activity\EmptyEditActivity;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -10,6 +11,10 @@ class AtLeastOneNotBlankValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         try {
+            if ($value instanceof EmptyEditActivity) {
+                return;
+            }
+
             $error = true;
             $reflection = new \ReflectionClass($value);
             foreach ($reflection->getProperties() as $property) {

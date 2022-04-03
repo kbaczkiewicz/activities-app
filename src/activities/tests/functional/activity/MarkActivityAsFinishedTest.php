@@ -25,7 +25,7 @@ class MarkActivityAsFinishedTest extends WebTestCase
 
         $response = $this->makeAuthenticatedRequest('PATCH', '/api/activity/'.$activityId, []);
         $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
-        $this->assertEquals(
+        $this->assertNotEquals(
             ActivityStatus::STATUS_COMPLETED,
             self::$container->get(ActivityRepository::class)->find($activityId)->getStatus()
         );

@@ -14,12 +14,12 @@ class MarkFailedActivitiesCommandTest extends KernelTestCase
         self::bootKernel();
         $application = new Application(self::$kernel);
 
-        $this->assertCount(4, static::$container->get(ActivityRepository::class)->getActivitiesToMarkAsFailed());
+        $this->assertCount(8, static::$container->get(ActivityRepository::class)->findActivitiesToMarkAsFailed());
 
         $command = $application->find('app:activity:mark-failed');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->assertCount(0, static::$container->get(ActivityRepository::class)->getActivitiesToMarkAsFailed());
+        $this->assertCount(0, static::$container->get(ActivityRepository::class)->findActivitiesToMarkAsFailed());
     }
 }

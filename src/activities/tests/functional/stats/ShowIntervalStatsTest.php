@@ -21,8 +21,8 @@ class ShowIntervalStatsTest extends WebTestCase
 
         $response = $this->makeAuthenticatedRequest('GET', '/api/intervalStats/' . $intervalId, []);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertStringContainsString('completedAmount', $response->getContent());
-        $this->assertStringContainsString('failedAmount', $response->getContent());
+        $this->assertStringContainsString('completed', $response->getContent());
+        $this->assertStringContainsString('failed', $response->getContent());
         $this->assertStringContainsString('completedPercent', $response->getContent());
     }
 

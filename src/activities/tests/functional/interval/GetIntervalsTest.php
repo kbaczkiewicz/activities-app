@@ -25,6 +25,6 @@ class GetIntervalsTest extends WebTestCase
         $response = $this->makeAuthenticatedRequest('GET', '/api/interval?status[]=ended', []);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $responseBody = json_decode($response->getContent());
-        $this->assertCount(2, $responseBody->data);
+        $this->assertCount(3, $responseBody->data);
     }
 }

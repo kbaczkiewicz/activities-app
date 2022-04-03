@@ -33,6 +33,7 @@ class AssignActivityToIntervalTest extends WebTestCase
         $activityRequestData = [
             'name' => 'Test activity '.md5(uniqid()),
             'typeId' => $activityType->getId(),
+            'dateStart' => (new \DateTime('now'))->format('Y-m-d')
         ];
 
         $response = $this->makeAuthenticatedRequest('POST', '/api/activity', $activityRequestData);

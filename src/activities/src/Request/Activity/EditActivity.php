@@ -21,7 +21,7 @@ class EditActivity
 
     public static function fromArray(array $data): EditActivity
     {
-        if (!isset($data['name']) && !isset($data['typeId'])) {
+        if (0 === count($data)) {
             return new EmptyEditActivity();
         }
 
