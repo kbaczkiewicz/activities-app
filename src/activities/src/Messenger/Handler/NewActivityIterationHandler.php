@@ -20,6 +20,7 @@ class NewActivityIterationHandler implements MessageHandlerInterface
         $activity = $message->getActivity();
         $interval = $activity->getInterval();
         $newActivity = $activity->createNewIterationOfActivity();
+        $newActivity->setFirst(false);
         if ($newActivity->getDateEnd() && $newActivity->getDateEnd() <= $interval->getDateEnd()) {
             $this->entityManager->persist($newActivity);
         }

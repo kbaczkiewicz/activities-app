@@ -37,6 +37,11 @@ class Activity
     private $status;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $first;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Interval", inversedBy="activities")
      * @ORM\JoinColumn(name="interval_id", referencedColumnName="id")
      */
@@ -122,6 +127,16 @@ class Activity
     public function setUser(UserInterface $user): void
     {
         $this->user = $user;
+    }
+
+    public function isFirst(): bool
+    {
+        return $this->first;
+    }
+
+    public function setFirst(bool $first): void
+    {
+        $this->first = $first;
     }
 
     public function getDateEnd(): ?\DateTime

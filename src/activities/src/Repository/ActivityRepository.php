@@ -69,10 +69,13 @@ class ActivityRepository extends EntityRepository
     public function findUniqueByInterval(Interval $interval): array
     {
         return $this->createQueryBuilder('a')
+            ->select('a')
             ->join('a.interval', 'i')
-            ->where('a.interval = :intervalId')
-            ->groupBy('a.id', 'i.id')
+            ->andwhere('a.interval = :intervalId')
             ->setParameters(['intervalId' => $interval->getId()])
+            ->andWhere('a.first = :first')
+            ->setParameter('first', true)
+            ->orderBy('a.dateStart')
             ->getQuery()->getResult();
     }
 

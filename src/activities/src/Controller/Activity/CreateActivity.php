@@ -74,7 +74,7 @@ class CreateActivity extends AbstractController implements BaseController
         $activity->setStatus(ActivityStatus::STATUS_CREATED);
         $activity->setType($activityType);
         $activity->setUser($user);
-
+        $activity->setFirst(true);
 
         $this->entityManager->persist($activity);
         $this->entityManager->flush();
